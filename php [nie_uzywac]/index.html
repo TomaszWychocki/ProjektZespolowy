@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Beer Factory 2.0</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="beerController.js"></script>
+</head>
+<body ng-app="beerApp" ng-controller="beerController">
+    <input type="button" value="BUTTON" ng-click="getData('[TEMP1]')" ng-disabled="run">
+    <p><h1>{{resp.response}}</h1></p>
+</body>
+</html>
