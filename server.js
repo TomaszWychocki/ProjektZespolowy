@@ -76,6 +76,7 @@ io.sockets.on('connection', function (socket) {
 			}
 			
 			x = true;
+			io.sockets.emit('state', {value: x});
 			console.log("START");
 		}
 		else {
@@ -86,6 +87,7 @@ io.sockets.on('connection', function (socket) {
 			while(commandBuffer.length > 0)
 				commandBuffer.pop();
 			x = false;
+			io.sockets.emit('state', {value: x});
 			console.log("STOP");
 		}
 	});
