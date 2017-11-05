@@ -1,0 +1,47 @@
+{
+	"recipes": [
+		{
+			"name": "Lager / Ale",
+			"ingredients": [
+				"15l wody",
+				"10g chmielu goryczkowego",
+				"20g chmielu aromatycznego"
+			],
+			"recipe": [
+				"Wlej do pojemnika 15L wody",
+				"Wsyp 4 kg słodu do pojemnika z wodą",
+				"[setTEMP]{62.00}",
+				"[setTIME]{1800.00}",
+				"[setTEMP]{72.00}",
+				"[setTIME]{1800.00}",
+				"[setTEMP]{85.00}",
+				"[setTEMP]{0.00}",
+				"Odfiltruj płyn od młóta",
+				"[setTEMP]{95.00}",
+				"Dodaj 10g chmielu goryczkowego",
+				"[setTIME]{1800.00}",
+				"Dodaj 10g chmielu aromatycznego",
+				"[setTIME]{1500.00}",
+				"Dodaj 10g chmielu aromatycznego",
+				"[setTIME]{300.00}",
+				"[setTEMP]{0.00}",
+				"Błyskawicznie schłódź brzeczkę",
+				"Zdekantuj  brzeczkę do fermentatora"
+			]
+		},
+		{
+			"name": "Porter",
+			"ingredients": [
+				"5l wody",
+				"15g chmielu goryczkowego",
+				"30g chmielu aromatycznego"
+			],
+			"recipe": [
+				"Wlej do pojemnika 15L wody",
+				"Wsyp 4 kg słodu do pojemnika z wodą",
+				"[setTEMP]{62.00}",
+				"[setTIME]{1800.00}"
+			]
+		}
+	]
+}

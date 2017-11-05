@@ -1,3 +1,7 @@
+#include "lib/OneWire/OneWire.h"
+#include "lib/DS18B20/DS18B20.h"
+#include "lib/MAX6675/max6675.h"
+
 #define TEMP1 A0 //Content temperature
 #define TEMP2 A1 //Heater temperature
 #define HEAT 8   //Heater relay
