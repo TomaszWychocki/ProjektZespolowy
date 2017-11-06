@@ -1,47 +1,159 @@
 {
-	"recipes": [
-		{
-			"name": "Lager / Ale",
-			"ingredients": [
-				"15l wody",
-				"10g chmielu goryczkowego",
-				"20g chmielu aromatycznego"
-			],
-			"recipe": [
-				"Wlej do pojemnika 15L wody",
-				"Wsyp 4 kg słodu do pojemnika z wodą",
-				"[setTEMP]{62.00}",
-				"[setTIME]{1800.00}",
-				"[setTEMP]{72.00}",
-				"[setTIME]{1800.00}",
-				"[setTEMP]{85.00}",
-				"[setTEMP]{0.00}",
-				"Odfiltruj płyn od młóta",
-				"[setTEMP]{95.00}",
-				"Dodaj 10g chmielu goryczkowego",
-				"[setTIME]{1800.00}",
-				"Dodaj 10g chmielu aromatycznego",
-				"[setTIME]{1500.00}",
-				"Dodaj 10g chmielu aromatycznego",
-				"[setTIME]{300.00}",
-				"[setTEMP]{0.00}",
-				"Błyskawicznie schłódź brzeczkę",
-				"Zdekantuj  brzeczkę do fermentatora"
-			]
-		},
-		{
-			"name": "Porter",
-			"ingredients": [
-				"5l wody",
-				"15g chmielu goryczkowego",
-				"30g chmielu aromatycznego"
-			],
-			"recipe": [
-				"Wlej do pojemnika 15L wody",
-				"Wsyp 4 kg słodu do pojemnika z wodą",
-				"[setTEMP]{62.00}",
-				"[setTIME]{1800.00}"
-			]
-		}
-	]
+  "recipes": [
+    {
+      "name": "Lager",
+      "ingredients": [
+        "15l wody",
+        "4 kg słodu pilzneńskiego",
+        "10g chmielu goryczkowego Marynka",
+        "20g chmielu aromatycznego Lubelski"
+      ],
+      "recipe": [
+        "Wlej do pojemnika 15L wody",
+        "Wsyp 4 kg słodu pilzneńskiego do pojemnika z wodą",
+        "[setTEMP]{62.00}",
+        "[setTIME]{1800.00}",
+        "[setTEMP]{72.00}",
+        "[setTIME]{1800.00}",
+        "[setTEMP]{85.00}",
+        "[setTEMP]{0.00}",
+        "Odfiltruj płyn od młóta",
+        "[setTEMP]{95.00}",
+        "Dodaj 10g chmielu goryczkowego Marynka",
+        "[setTIME]{1800.00}",
+        "Dodaj 10g chmielu aromatycznego Lubelski",
+        "[setTIME]{1500.00}",
+        "Dodaj kolejne 10g chmielu aromatycznego Lubelski",
+        "[setTIME]{300.00}",
+        "[setTEMP]{0.00}",
+        "Błyskawicznie schłódź brzeczkę",
+        "Zdekantuj brzeczkę do fermentatora",
+        "Przechowuj płyn przez 4 tygodnie w temperaturze 7-11°C"
+      ]
+    },
+    {
+      "name": "Amber Ale",
+      "ingredients": [
+        "15l wody",
+        "4 kg słodu monachijskiego",
+        "10g chmielu goryczkowego Marynka",
+        "20g chmielu aromatycznego Brewers Gold"
+      ],
+      "recipe": [
+        "Wlej do pojemnika 15L wody",
+        "Wsyp 4 kg słodu monachijskiego do pojemnika z wodą",
+        "[setTEMP]{62.00}",
+        "[setTIME]{1800.00}",
+        "[setTEMP]{72.00}",
+        "[setTIME]{1800.00}",
+        "[setTEMP]{85.00}",
+        "[setTEMP]{0.00}",
+        "Odfiltruj płyn od młóta",
+        "[setTEMP]{95.00}",
+        "Dodaj 10g chmielu goryczkowego Marynka",
+        "[setTIME]{1800.00}",
+        "Dodaj 10g chmielu aromatycznego Brewers Gold",
+        "[setTIME]{1500.00}",
+        "Dodaj kolejne 10g chmielu aromatycznego Brewers Gold",
+        "[setTIME]{300.00}",
+        "[setTEMP]{0.00}",
+        "Błyskawicznie schłódź brzeczkę",
+        "Zdekantuj brzeczkę do fermentatora",
+        "Przechowuj płyn przez 4 tygodnie w temperaturze 15-20°C"
+      ]
+    },
+    {
+      "name": "Stout",
+      "ingredients": [
+        "15l wody",
+        "4 kg słodu Pale Ale MARIS OTTER",
+        "10g chmielu goryczkowego Nugget",
+        "20g chmielu aromatycznego Styrian Goldings"
+      ],
+      "recipe": [
+        "Wlej do pojemnika 15L wody",
+        "Wsyp 4 kg słodu Pale Ale MARIS OTTER do pojemnika z wodą",
+        "[setTEMP]{62.00}",
+        "[setTIME]{1800.00}",
+        "[setTEMP]{72.00}",
+        "[setTIME]{1800.00}",
+        "[setTEMP]{85.00}",
+        "[setTEMP]{0.00}",
+        "Odfiltruj płyn od młóta",
+        "[setTEMP]{95.00}",
+        "Dodaj 10g chmielu goryczkowego Nugget",
+        "[setTIME]{1800.00}",
+        "Dodaj 10g chmielu aromatycznego Styrian Goldings",
+        "[setTIME]{1500.00}",
+        "Dodaj kolejne 10g chmielu aromatycznego Styrian Goldings",
+        "[setTIME]{300.00}",
+        "[setTEMP]{0.00}",
+        "Błyskawicznie schłódź brzeczkę",
+        "Zdekantuj brzeczkę do fermentatora",
+        "Przechowuj płyn przez 4 tygodnie w temperaturze 15-20°C"
+      ]
+    },
+    {
+      "name": "Pale Ale",
+      "ingredients": [
+        "15l wody",
+        "4 kg słodu Pale Ale",
+        "10g chmielu goryczkowego Nugget",
+        "20g chmielu aromatycznego Bullion"
+      ],
+      "recipe": [
+        "Wlej do pojemnika 15L wody",
+        "Wsyp 4 kg słodu Pale Ale do pojemnika z wodą",
+        "[setTEMP]{62.00}",
+        "[setTIME]{1800.00}",
+        "[setTEMP]{72.00}",
+        "[setTIME]{1800.00}",
+        "[setTEMP]{85.00}",
+        "[setTEMP]{0.00}",
+        "Odfiltruj płyn od młóta",
+        "[setTEMP]{95.00}",
+        "Dodaj 10g chmielu goryczkowego Nugget",
+        "[setTIME]{1800.00}",
+        "Dodaj 10g chmielu aromatycznego Bullion",
+        "[setTIME]{1500.00}",
+        "Dodaj kolejne 10g chmielu aromatycznego Bullion",
+        "[setTIME]{300.00}",
+        "[setTEMP]{0.00}",
+        "Błyskawicznie schłódź brzeczkę",
+        "Zdekantuj brzeczkę do fermentatora",
+        "Przechowuj płyn przez 4 tygodnie w temperaturze 15-20°C"
+      ]
+    },
+    {
+      "name": "SuperFastTestBeer",
+      "ingredients": [
+        "15l wody",
+        "4 kg słodu Pale Ale",
+        "10g chmielu goryczkowego Nugget",
+        "20g chmielu aromatycznego Bullion"
+      ],
+      "recipe": [
+        "Wlej do pojemnika 15L wody",
+        "Wsyp 4 kg słodu Pale Ale do pojemnika z wodą",
+        "[setTEMP]{30.00}",
+        "[setTIME]{30.00}",
+        "[setTEMP]{40.00}",
+        "[setTIME]{30.00}",
+        "[setTEMP]{45.00}",
+        "[setTEMP]{0.00}",
+        "Odfiltruj płyn od młóta",
+        "[setTEMP]{50.00}",
+        "Dodaj 10g chmielu goryczkowego Nugget",
+        "[setTIME]{30.00}",
+        "Dodaj 10g chmielu aromatycznego Bullion",
+        "[setTIME]{30.00}",
+        "Dodaj kolejne 10g chmielu aromatycznego Bullion",
+        "[setTIME]{30.00}",
+        "[setTEMP]{0.00}",
+        "Błyskawicznie schłódź brzeczkę",
+        "Zdekantuj brzeczkę do fermentatora",
+        "Przechowuj płyn przez 4 tygodnie w temperaturze 15-20°C"
+      ]
+    }
+  ]
 }

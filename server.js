@@ -14,9 +14,11 @@ var arduino = new SerialPort("/dev/ttyUSB0", {
 
 var intervalObj = null;
 var intervalObj2 = null;
-var x = false;
+var run = false;
 var lock = false;
 var commandBuffer = [];
+var selectedBeer = null;
+var recipePosition = 0;
 server.listen(8080);
 app.use(express.static('public'));
 
@@ -36,8 +38,11 @@ arduino.on('open', function() {
 			io.sockets.emit('message', {type: "TIME", value: m});
 		else if(m.includes("ACTION"))
 			io.sockets.emit('message', {type: "ACTION", value: m});
-		else if(m.includes("END"))
-			io.sockets.emit('message', {type: "END", value: m});
+		else if(m.includes("END")) {
+            recipePosition++;
+            io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition});
+            commandBuffer.push(selectedBeer.recipe[recipePosition] + '\n');
+        }
 		else if(m.includes("ERR"))
 			console.log("COMMAND ERROR");
 		
@@ -52,8 +57,7 @@ arduino.on('open', function() {
 io.sockets.on('connection', function (socket) {
 	socket.on('start', function (data) {
 		if(data.value == '1') {
-			commandBuffer.push('[setTIME]{600.0}\n');
-			commandBuffer.push('[setACTI]{1}\n');
+			commandBuffer.push(selectedBeer.recipe[recipePosition] + '\n');
 			
 			if(intervalObj == null) {
 				intervalObj = setInterval(function() {
@@ -74,9 +78,9 @@ io.sockets.on('connection', function (socket) {
 					}
 				}, 100);
 			}
-			
-			x = true;
-			io.sockets.emit('state', {value: x});
+
+            run = true;
+            io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition});
 			console.log("START");
 		}
 		else {
@@ -84,19 +88,27 @@ io.sockets.on('connection', function (socket) {
 			clearInterval(intervalObj2);
 			intervalObj = null;
 			intervalObj2 = null;
+            selectedBeer = null;
+            recipePosition = 0;
 			while(commandBuffer.length > 0)
 				commandBuffer.pop();
-			x = false;
-			io.sockets.emit('state', {value: x});
+            run = false;
+			io.sockets.emit('state', {value: run});
 			console.log("STOP");
 		}
 	});
+
+    socket.on('selectedBeer', function (data) {
+        selectedBeer = data.value;
+        io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition});
+    });
+
+    socket.on('recipePosition', function (data) {
+        recipePosition = data.value;
+        io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition});
+    });
 	
-	socket.on('send', function (data) {
-		commandBuffer.push('[setTEMP]{' + data.value + '}');
-	});
-	
-	io.sockets.emit('state', {value: x});
+	io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition});
 });
 
 console.log("running");

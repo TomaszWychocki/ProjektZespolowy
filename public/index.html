@@ -1,42 +1,63 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-  <head>
-        <title>Beer Controller v2.0</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-        <script src="socket.io/socket.io.js"></script>
-  </head>
-  <body ng-app="beerApp" ng-controller="beerController">
-        <input type="button" value="{{ run ? 'STOP' : 'START' }}" ng-click="start()" /><br><br>
-		
-		<select ng-model="selectedBeer" 
-				ng-init="selectedBeer = recipes.data.recipes[0]"
-				ng-options="recipe.name for recipe in recipes.data.recipes"
-				ng-hide="run">
-				<option value="" disabled>-- Wybierz piwo --</option>
-		</select>
-		
-		<div ng-show="run">
-			<h1>{{selectedBeer.name}}</h1>
-		
-			Składniki:
-			<ol>
-				<li ng-repeat="item in selectedBeer.ingredients">{{item}}</li>
-			</ol>
-			
-			<input type="button" value="DALEJ" ng-click="next()" />
-			{{recipeText}}
-		</div>
-		
-		<!--<input type="text" ng-model="command" placeholder="Target temperature"/>
-		<input type="button" value="SEND" ng-click="send()" />-->
-		  
-		<p style="font-size: 20px">{{temp1}}</p>
-		<p style="font-size: 20px">{{temp2}}</p>
-		<p style="font-size: 20px">{{heat}}</p>
-		<p style="font-size: 20px">{{time}}</p>
-		<p style="font-size: 20px">{{action}}</p>
-	   
-        <script type="text/javascript" src="script.js"></script>
-  </body>
+<head>
+    <title>Beer Controller</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/bootstrap-theme.min.css">
+    <script src="bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="angular.min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+<body ng-app="beerApp" ng-controller="beerController" ng-cloak>
+    <div class="container">
+        <div class="header clearfix">
+            <h3 class="text-muted">Beer Controller</h3>
+        </div>
+
+        <div class="jumbotron">
+            <h1 ng-if="selectedBeer">{{selectedBeer.name}}</h1>
+            <h1 ng-if="!selectedBeer">WITAJ</h1>
+
+            <select ng-model="selectedBeer"
+                    ng-options="recipe.name for recipe in recipes.data.recipes"
+                    ng-disabled="run"
+                    class="form-control">
+                <option value="" disabled>-- Wybierz piwo --</option>
+            </select>
+
+            <p class="lead" ng-if="selectedBeer">
+                Składniki:
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="item in selectedBeer.ingredients">{{item}}</li>
+                </ul>
+            </p>
+
+            <div class="infoBar bg-primary text-white" ng-if="run"><h2>{{recipeText}}</h2></div>
+
+            <p>
+                <button type="button" ng-disabled="!selectedBeer" ng-class="run ? 'btn btn-lg btn-danger' : 'btn btn-lg btn-success'" ng-click="start()">{{ run ? 'Zatrzymaj warzenie' : 'Rozpocznij warzenie' }}</button>
+                <button type="button" class="btn btn-lg btn-info" ng-if="run" ng-click="next()" ng-disabled="!isNextButtonClickable">Dalej</button>
+            </p>
+        </div>
+
+        <div class="row marketing">
+            <div class="col-lg-6">
+                <h4>Time</h4>
+                <p>{{time}}</p>
+
+                <h4>Target temp</h4>
+                <p>{{targetTemp}}</p>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2017 Wydział Informatyki Zachodniopomorskiego Uniwersytetu Technologicznego w Szczecinie</p>
+        </footer>
+
+    </div> <!-- /container -->
+</body>
 </html>

@@ -17,6 +17,7 @@ void setup() {
   Serial.setTimeout(20);
   Serial.begin(9600);
   pinMode(HEAT, OUTPUT);
+  pinMode(6, INPUT);
 }
 
 double getContentTemperature() {
@@ -95,6 +96,12 @@ void loop() {
       heater = true;
     else
       heater = false;
+  }
+
+  if(digitalRead(6)) {
+    delay(10);
+    while(digitalRead(6));
+    Serial.println("END");
   }
 
   digitalWrite(HEAT, heater);
