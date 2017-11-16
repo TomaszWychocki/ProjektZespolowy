@@ -21,8 +21,6 @@ angular.module('beerApp', []).controller('beerController', function($http, $scop
 			$scope.heat = data.value;	
 		else if(data.type == "TIME")
 			$scope.time = data.value;
-		else if(data.type == "ACTION")
-			$scope.action = data.value;
 		$scope.$apply();
 	});
 	

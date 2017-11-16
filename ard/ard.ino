@@ -5,10 +5,12 @@
 #define TEMP1 A0 //Content temperature
 #define TEMP2 A1 //Heater temperature
 #define HEAT 8   //Heater relay
+#define DEBUG
 
 String message;
 bool heater = false;
-bool action = false; //true - warming | false - wait
+bool action = true; //true - heating   false - keeping
+bool endSent = true;
 double time = 0.0;
 double targetTemp = 0.0;
 double last = 0.0;
@@ -17,18 +19,21 @@ void setup() {
   Serial.setTimeout(20);
   Serial.begin(9600);
   pinMode(HEAT, OUTPUT);
-  pinMode(6, INPUT);
 }
 
 double getContentTemperature() {
-  //....code
-  double t = 24.52;
+  double t = 41.52;
+  #ifdef DEBUG
+    t = 0.12 * analogRead(TEMP1);
+  #endif
   return t;
 }
 
 double getHeaterTemperature() {
-  //....code
   double t = 41.52;
+  #ifdef DEBUG
+    t = 0.12 * analogRead(TEMP2);
+  #endif
   return t;
 }
 
@@ -51,26 +56,18 @@ void loop() {
       String resp = "TIME{" + String(time, 1) + "}";
       Serial.println(resp);
     }
-    else if (message.startsWith("[getACTION]")) {
-      String resp = "ACTION{" + String(action) + "}";
-      Serial.println(resp);
-    }
     else if (message.startsWith("[setTEMP]")) { //[setTEMP]{60.3}
       String val = message.substring(10, message.indexOf('}'));
       targetTemp = val.toDouble();
+      action = true;
+      endSent = false;
       Serial.println("OK");
     }
     else if (message.startsWith("[setTIME]")) { //[setTIME]{4569795}
       String val = message.substring(10, message.indexOf('}'));
       time = val.toDouble();
-      Serial.println("OK");
-    }
-    else if (message.startsWith("[setACTI]")) { //[setACTI]{1}
-      char val = message.charAt(10);
-      if (val == '1')
-        action = true;
-      else
-        action = false;
+      endSent = false;
+      action = false;
       Serial.println("OK");
     }
     else {
@@ -78,30 +75,28 @@ void loop() {
     }
   }
 
-  if (millis() - last >= 1000) {
+  if (millis() - last >= 1000 && !action) {
     last = millis();
     time--;
   }
 
-  if (time <= 0.0) {
+  if (time <= 0.0 && !action) {
     time = 0.0;
-    heater = false;
-    if (targetTemp > 0) {
+    if (!endSent) {
       Serial.println("END");
-      targetTemp = -1.0;
+      endSent = true;
     }
   }
-  else {
-    if (action && getContentTemperature() < targetTemp && getHeaterTemperature() < targetTemp + 5.0)
-      heater = true;
-    else
-      heater = false;
+  
+  if (getContentTemperature() < targetTemp && getHeaterTemperature() < targetTemp + 5.0) {
+    heater = true;
   }
-
-  if(digitalRead(6)) {
-    delay(10);
-    while(digitalRead(6));
-    Serial.println("END");
+  else {
+    heater = false;
+    if (!endSent && action) {
+      Serial.println("END");
+      endSent = true;
+    }
   }
 
   digitalWrite(HEAT, heater);

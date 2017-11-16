@@ -26,7 +26,7 @@ arduino.on('open', function() {
 	arduino.on('data', function(data) {
 		var m = data.toString('ascii');
 		m = m.replace("\n", "");
-		console.log(m);
+		//console.log(m);
 
 		if(m.includes("TEMP1"))
 			io.sockets.emit('message', {type: "TEMP1", value: m});
@@ -36,12 +36,13 @@ arduino.on('open', function() {
 			io.sockets.emit('message', {type: "HEAT", value: m});
 		else if(m.includes("TIME"))
 			io.sockets.emit('message', {type: "TIME", value: m});
-		else if(m.includes("ACTION"))
-			io.sockets.emit('message', {type: "ACTION", value: m});
 		else if(m.includes("END")) {
             recipePosition++;
             io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition});
-            commandBuffer.push(selectedBeer.recipe[recipePosition] + '\n');
+            if(selectedBeer.recipe[recipePosition].includes("]")) {
+                commandBuffer.push(selectedBeer.recipe[recipePosition] + '\n');
+                console.log(selectedBeer.recipe[recipePosition]);
+            }
         }
 		else if(m.includes("ERR"))
 			console.log("COMMAND ERROR");
@@ -57,15 +58,12 @@ arduino.on('open', function() {
 io.sockets.on('connection', function (socket) {
 	socket.on('start', function (data) {
 		if(data.value == '1') {
-			commandBuffer.push(selectedBeer.recipe[recipePosition] + '\n');
-			
 			if(intervalObj == null) {
 				intervalObj = setInterval(function() {
 					commandBuffer.push('[getTEMP1]\n');
 					commandBuffer.push('[getTEMP2]\n');
 					commandBuffer.push('[getHEAT]\n');
 					commandBuffer.push('[getTIME]\n');
-					commandBuffer.push('[getACTION]\n');		
 				}, 1000);
 			}
 			
@@ -106,6 +104,10 @@ io.sockets.on('connection', function (socket) {
     socket.on('recipePosition', function (data) {
         recipePosition = data.value;
         io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition});
+        if(selectedBeer.recipe[recipePosition].includes("]")) {
+            commandBuffer.push(selectedBeer.recipe[recipePosition] + '\n');
+            console.log(selectedBeer.recipe[recipePosition]);
+        }
     });
 	
 	io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition});
