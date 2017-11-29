@@ -63,6 +63,13 @@ void loop() {
       endSent = false;
       Serial.println("OK");
     }
+    else if (message.startsWith("[STOP]")) {
+      targetTemp = 0.0;
+      time = 0.0;
+      action = true;
+      endSent = false;
+      Serial.println("OK");
+    }
     else if (message.startsWith("[setTIME]")) { //[setTIME]{4569795}
       String val = message.substring(10, message.indexOf('}'));
       time = val.toDouble();

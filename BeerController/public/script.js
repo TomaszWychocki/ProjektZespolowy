@@ -6,6 +6,7 @@ angular.module('beerApp', []).controller('beerController', function($http, $scop
 	$scope.socket = io.connect();
 	$scope.run = false;
 	$scope.recipePosition = 0;
+	$scope.time = 0;
 	
 	$http.get('recipes.json').then(function (data){
 		$scope.recipes = data;
@@ -18,9 +19,13 @@ angular.module('beerApp', []).controller('beerController', function($http, $scop
 		else if(data.type == "TEMP2")
             temp2Gauge.value = parseFloat(data.value.substring(6, data.value.indexOf('}')));
 		else if(data.type == "HEAT")
-			$scope.heat = data.value;	
-		else if(data.type == "TIME")
-			$scope.time = data.value;
+			$scope.heat = parseInt(data.value.substring(5, data.value.indexOf('}')));
+		else if(data.type == "TIME") {
+            $scope.time = parseInt(data.value.substring(5, data.value.indexOf('}')));
+            if($scope.time > 0) {
+                $scope.recipeText = "Utrzymywanie temperatury przez " + secondsToHms($scope.time);
+			}
+        }
 		$scope.$apply();
 	});
 	
@@ -29,6 +34,8 @@ angular.module('beerApp', []).controller('beerController', function($http, $scop
         $scope.selectedBeer = data.selectedBeer;
         $scope.recipePosition = data.recipePosition;
         $scope.isNextButtonClickable = true;
+        $scope.targetTemp = data.lastSetTemp;
+        targetTempGauge.value = $scope.targetTemp;
 
         if($scope.run) {
             $scope.recipeText = getRecipeText($scope.selectedBeer.recipe[$scope.recipePosition]);
@@ -79,8 +86,8 @@ angular.module('beerApp', []).controller('beerController', function($http, $scop
 
 	function getRecipeText(txt) {
 		if(txt.includes("[setTEMP]")) {
-            $scope.targetTemp = parseFloat(txt.substring(10, txt.indexOf('}')));
-            targetTempGauge.value = $scope.targetTemp;
+            //$scope.targetTemp = parseFloat(txt.substring(10, txt.indexOf('}')));
+            //targetTempGauge.value = $scope.targetTemp;
             $scope.isNextButtonClickable = false;
             if($scope.targetTemp > 5.0)
 				return "Podgrzewanie do temperatury " + txt.substring(10, txt.indexOf('}')) + "°C...";
@@ -89,11 +96,23 @@ angular.module('beerApp', []).controller('beerController', function($http, $scop
 		}
         else if(txt.includes("[setTIME]")) {
             $scope.isNextButtonClickable = false;
-            return "Utrzymywanie temperatury przez " + parseInt(txt.substring(10, txt.indexOf('}')))/60 + " minut...";
+            return "Utrzymywanie temperatury przez " + secondsToHms($scope.time);
+
+            //return "Utrzymywanie temperatury przez " + parseInt(txt.substring(10, txt.indexOf('}')))/60 + " minut...";
         }
 		else {
             $scope.isNextButtonClickable = true;
             return txt;
         }
 	}
+
+    function secondsToHms(d) {
+        d = Number(d);
+
+        var h = Math.floor(d / 3600);
+        var m = Math.floor(d % 3600 / 60);
+        var s = Math.floor(d % 3600 % 60);
+
+        return ('0' + h).slice(-2) + ":" + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
+    }
 });
