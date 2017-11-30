@@ -1,165 +1,165 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <title>Beer Controller</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="jquery-3.2.1.min.js"></script>
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="bootstrap/bootstrap-theme.min.css">
-    <script src="bootstrap/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="angular.min.js"></script>
-    <script src="socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="gauge.min.js"></script>
-    <script type="text/javascript" src="script.js"></script>
+	<title>Beer Controller</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="jquery-3.2.1.min.js"></script>
+	<link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" href="bootstrap/bootstrap-theme.min.css">
+	<script src="bootstrap/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="style.css">
+	<script type="text/javascript" src="angular.min.js"></script>
+	<script src="socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="gauge.min.js"></script>
+	<script type="text/javascript" src="script.js"></script>
 </head>
 <body ng-app="beerApp" ng-controller="beerController" ng-cloak>
-    <div class="container">
-        <div class="header clearfix">
-            <h3 class="text-muted">Beer Controller</h3>
-        </div>
+	<div class="container">
+		<div class="header clearfix">
+			<h3 class="text-muted">Beer Controller</h3>
+		</div>
 
-        <div class="jumbotron">
-            <h1 ng-if="selectedBeer">{{selectedBeer.name | uppercase}}</h1>
-            <h1 ng-if="!selectedBeer">WITAJ</h1>
+		<div class="jumbotron">
+			<h1 ng-if="selectedBeer">{{selectedBeer.name | uppercase}}</h1>
+			<h1 ng-if="!selectedBeer">WITAJ</h1>
 
-            <select ng-model="selectedBeer"
-                    ng-options="recipe.name for recipe in recipes.data.recipes"
-                    ng-disabled="run"
-                    class="form-control">
-                <option value="" disabled>-- Wybierz piwo --</option>
-            </select>
+			<select ng-model="selectedBeer"
+					ng-options="recipe.name for recipe in recipes.data.recipes"
+					ng-disabled="run"
+					class="form-control">
+				<option value="" disabled>-- Wybierz piwo --</option>
+			</select>
 
-            <br>
+			<br>
 
-            <div class="panel panel-primary" ng-if="selectedBeer">
-                <div class="panel-heading">Składniki</div>
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="item in selectedBeer.ingredients">{{item}}</li>
-                </ul>
-            </div>
+			<div class="panel panel-primary" ng-if="selectedBeer">
+				<div class="panel-heading">Składniki</div>
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="item in selectedBeer.ingredients">{{item}}</li>
+				</ul>
+			</div>
 
 
-            <div class="infoBar bg-primary text-white" ng-if="run"><h2>{{recipeText}}</h2></div>
+			<div class="infoBar bg-primary text-white" ng-if="run"><h2>{{recipeText}}</h2></div>
 
-            <p>
-                <button type="button" ng-disabled="!selectedBeer" ng-class="run ? 'btn btn-lg btn-danger' : 'btn btn-lg btn-success'" ng-click="start()">{{ run ? 'Zatrzymaj warzenie' : 'Rozpocznij warzenie' }}</button>
-                <button type="button" class="btn btn-lg btn-info" ng-if="run" ng-click="next()" ng-disabled="!isNextButtonClickable">Dalej</button>
-            </p>
-        </div>
+			<p>
+				<button type="button" ng-disabled="!selectedBeer" ng-class="run ? 'btn btn-lg btn-danger' : 'btn btn-lg btn-success'" ng-click="start()">{{ run ? 'Zatrzymaj warzenie' : 'Rozpocznij warzenie' }}</button>
+				<button type="button" class="btn btn-lg btn-info" ng-if="run" ng-click="next()" ng-disabled="!isNextButtonClickable">Dalej</button>
+			</p>
+		</div>
 
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><b>Temperatura zawartości</b></h4>
-                        <p class="card-text">
-                            <canvas id="temp1"
-                                    data-type="radial-gauge"
-                                    data-width="250"
-                                    data-height="250"
-                                    data-units="°C"
-                                    data-min-value="0"
-                                    data-max-value="150"
-                                    data-major-ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150"
-                                    data-minor-ticks="2"
-                                    data-stroke-ticks="true"
-                                    data-highlights='[
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="card text-center">
+					<div class="card-block">
+						<h4 class="card-title"><b>Temperatura zawartości</b></h4>
+						<p class="card-text">
+							<canvas id="temp1"
+									data-type="radial-gauge"
+									data-width="250"
+									data-height="250"
+									data-units="°C"
+									data-min-value="0"
+									data-max-value="150"
+									data-major-ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150"
+									data-minor-ticks="2"
+									data-stroke-ticks="true"
+									data-highlights='[
 									{"from": 100, "to": 150, "color": "rgba(200, 50, 50, .75)"}
-								    ]'
-                                    data-color-plate="#fff"
-                                    data-border-shadow-width="0"
-                                    data-borders="false"
-                                    data-needle-type="arrow"
-                                    data-needle-width="2"
-                                    data-needle-circle-size="7"
-                                    data-needle-circle-outer="true"
-                                    data-needle-circle-inner="false"
-                                    data-animation-duration="500"
-                                    data-animation-rule="dequad"
-                                    data-animated-value="true"
-                                    data-color-value-box-background="#ccc"
-                            ></canvas>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><b>Temperatura docelowa</b></h4>
-                        <p class="card-text">
-                            <canvas id="targetTemp"
-                                    data-type="radial-gauge"
-                                    data-width="250"
-                                    data-height="250"
-                                    data-units="°C"
-                                    data-min-value="0"
-                                    data-max-value="150"
-                                    data-major-ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150"
-                                    data-minor-ticks="2"
-                                    data-stroke-ticks="true"
-                                    data-highlights='[
+									]'
+									data-color-plate="#fff"
+									data-border-shadow-width="0"
+									data-borders="false"
+									data-needle-type="arrow"
+									data-needle-width="2"
+									data-needle-circle-size="7"
+									data-needle-circle-outer="true"
+									data-needle-circle-inner="false"
+									data-animation-duration="500"
+									data-animation-rule="dequad"
+									data-animated-value="true"
+									data-color-value-box-background="#ccc"
+							></canvas>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="card text-center">
+					<div class="card-block">
+						<h4 class="card-title"><b>Temperatura docelowa</b></h4>
+						<p class="card-text">
+							<canvas id="targetTemp"
+									data-type="radial-gauge"
+									data-width="250"
+									data-height="250"
+									data-units="°C"
+									data-min-value="0"
+									data-max-value="150"
+									data-major-ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150"
+									data-minor-ticks="2"
+									data-stroke-ticks="true"
+									data-highlights='[
 									{"from": 100, "to": 150, "color": "rgba(200, 50, 50, .75)"}
-								    ]'
-                                    data-color-plate="#fff"
-                                    data-border-shadow-width="0"
-                                    data-borders="false"
-                                    data-needle-type="arrow"
-                                    data-needle-width="2"
-                                    data-needle-circle-size="7"
-                                    data-needle-circle-outer="true"
-                                    data-needle-circle-inner="false"
-                                    data-animation-duration="500"
-                                    data-animation-rule="dequad"
-                                    data-animated-value="true"
-                                    data-color-value-box-background="{{ heat ? '#f00' : '#ccc' }}"
-                            ></canvas>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card text-center">
-                    <div class="card-block">
-                        <h4 class="card-title"><b>Temperatura grzałki</b></h4>
-                        <p class="card-text">
-                            <canvas id="temp2"
-                                    data-type="radial-gauge"
-                                    data-width="250"
-                                    data-height="250"
-                                    data-units="°C"
-                                    data-min-value="0"
-                                    data-max-value="150"
-                                    data-major-ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150"
-                                    data-minor-ticks="2"
-                                    data-stroke-ticks="true"
-                                    data-highlights='[
+									]'
+									data-color-plate="#fff"
+									data-border-shadow-width="0"
+									data-borders="false"
+									data-needle-type="arrow"
+									data-needle-width="2"
+									data-needle-circle-size="7"
+									data-needle-circle-outer="true"
+									data-needle-circle-inner="false"
+									data-animation-duration="500"
+									data-animation-rule="dequad"
+									data-animated-value="true"
+									data-color-value-box-background="{{ heat ? '#f00' : '#ccc' }}"
+							></canvas>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="card text-center">
+					<div class="card-block">
+						<h4 class="card-title"><b>Temperatura grzałki</b></h4>
+						<p class="card-text">
+							<canvas id="temp2"
+									data-type="radial-gauge"
+									data-width="250"
+									data-height="250"
+									data-units="°C"
+									data-min-value="0"
+									data-max-value="150"
+									data-major-ticks="0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150"
+									data-minor-ticks="2"
+									data-stroke-ticks="true"
+									data-highlights='[
 									{"from": 100, "to": 150, "color": "rgba(200, 50, 50, .75)"}
-								    ]'
-                                    data-color-plate="#fff"
-                                    data-border-shadow-width="0"
-                                    data-borders="false"
-                                    data-needle-type="arrow"
-                                    data-needle-width="2"
-                                    data-needle-circle-size="7"
-                                    data-needle-circle-outer="true"
-                                    data-needle-circle-inner="false"
-                                    data-animation-duration="500"
-                                    data-animation-rule="dequad"
-                                    data-animated-value="true"
-                                    data-color-value-box-background="#ccc"
-                            ></canvas>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+									]'
+									data-color-plate="#fff"
+									data-border-shadow-width="0"
+									data-borders="false"
+									data-needle-type="arrow"
+									data-needle-width="2"
+									data-needle-circle-size="7"
+									data-needle-circle-outer="true"
+									data-needle-circle-inner="false"
+									data-animation-duration="500"
+									data-animation-rule="dequad"
+									data-animated-value="true"
+									data-color-value-box-background="#ccc"
+							></canvas>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <footer class="footer">
-            <p>&copy; 2017 Wydział Informatyki Zachodniopomorskiego Uniwersytetu Technologicznego w Szczecinie</p>
-        </footer>
+		<footer class="footer">
+			<p>&copy; 2017 Wydział Informatyki Zachodniopomorskiego Uniwersytetu Technologicznego w Szczecinie</p>
+		</footer>
 
-    </div> <!-- /container -->
+	</div> <!-- /container -->
 </body>
 </html>

@@ -5,12 +5,12 @@ io = require('socket.io').listen(server);
 
 var SerialPort = require("serialport");
 var arduino = new SerialPort("/dev/ttyUSB0", {
-    baudRate : 9600,
-    dataBits : 8,
-    parity : 'none',
-    stopBits: 1,
-    flowControl : false,
-}); 
+	baudRate : 9600,
+	dataBits : 8,
+	parity : 'none',
+	stopBits: 1,
+	flowControl : false,
+});
 
 var intervalObj = null;
 var intervalObj2 = null;
@@ -38,21 +38,21 @@ arduino.on('open', function() {
 		else if(m.includes("TIME"))
 			io.sockets.emit('message', {type: "TIME", value: m});
 		else if(m.includes("END") && run) {
-            recipePosition++;
-            io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
-            if(selectedBeer.recipe[recipePosition].includes("]")) {
-                commandBuffer.push(selectedBeer.recipe[recipePosition] + '\n');
-                console.log(selectedBeer.recipe[recipePosition]);
-            }
-        }
+			recipePosition++;
+			io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
+			if(selectedBeer.recipe[recipePosition].includes("]")) {
+				commandBuffer.push(selectedBeer.recipe[recipePosition] + '\n');
+				console.log(selectedBeer.recipe[recipePosition]);
+			}
+		}
 		else if(m.includes("ERR"))
 			console.log("COMMAND ERROR");
-		
+
 		lock = false;
 	});
-	
+
 	/*setInterval(function() {
-		console.log(".");	
+		console.log(".");
 	}, 1000);*/
 });
 
@@ -67,7 +67,7 @@ io.sockets.on('connection', function (socket) {
 					commandBuffer.push('[getTIME]\n');
 				}, 1000);
 			}
-			
+
 			if(intervalObj2 == null) {
 				intervalObj2 = setInterval(function() {
 					if(!lock && commandBuffer.length > 0){
@@ -75,15 +75,15 @@ io.sockets.on('connection', function (socket) {
 						var cmd = commandBuffer.pop();
 						if(cmd.includes("[setTEMP]")) {
 							lastSetTemp = parseFloat(cmd.substring(10, cmd.indexOf('}')));
-                            io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
+							io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
 						}
 						arduino.write(cmd);
 					}
 				}, 100);
 			}
 
-            run = true;
-            io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
+			run = true;
+			io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
 			console.log("START");
 		}
 		else {
@@ -91,31 +91,31 @@ io.sockets.on('connection', function (socket) {
 			//clearInterval(intervalObj2);
 			intervalObj = null;
 			//intervalObj2 = null;
-            selectedBeer = null;
-            recipePosition = 0;
-            lastSetTemp = 0.0;
+			selectedBeer = null;
+			recipePosition = 0;
+			lastSetTemp = 0.0;
 			while(commandBuffer.length > 0)
 				commandBuffer.pop();
-            commandBuffer.push('[STOP]\n');
-            run = false;
+			commandBuffer.push('[STOP]\n');
+			run = false;
 			io.sockets.emit('state', {value: run});
 			console.log("STOP");
 		}
 	});
 
-    socket.on('selectedBeer', function (data) {
-        selectedBeer = data.value;
-        io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
-    });
+	socket.on('selectedBeer', function (data) {
+		selectedBeer = data.value;
+		io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
+	});
 
-    socket.on('recipePosition', function (data) {
-        recipePosition = data.value;
-        io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
-        if(selectedBeer.recipe[recipePosition].includes("]")) {
-            commandBuffer.push(selectedBeer.recipe[recipePosition] + '\n');
-            console.log(selectedBeer.recipe[recipePosition]);
-        }
-    });
+	socket.on('recipePosition', function (data) {
+		recipePosition = data.value;
+		io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
+		if(selectedBeer.recipe[recipePosition].includes("]")) {
+			commandBuffer.push(selectedBeer.recipe[recipePosition] + '\n');
+			console.log(selectedBeer.recipe[recipePosition]);
+		}
+	});
 	
 	io.sockets.emit('state', {"run": run, "selectedBeer": selectedBeer, "recipePosition": recipePosition, "lastSetTemp": lastSetTemp});
 });
