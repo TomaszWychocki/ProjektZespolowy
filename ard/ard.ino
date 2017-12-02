@@ -61,24 +61,24 @@ void loop() {
       targetTemp = val.toDouble();
       action = true;
       endSent = false;
-      Serial.println("OK");
+      Serial.println("COMM{OK}");
     }
     else if (message.startsWith("[STOP]")) {
       targetTemp = 0.0;
       time = 0.0;
       action = true;
       endSent = false;
-      Serial.println("OK");
+      Serial.println("COMM{OK}");
     }
     else if (message.startsWith("[setTIME]")) { //[setTIME]{4569795}
       String val = message.substring(10, message.indexOf('}'));
       time = val.toDouble();
       endSent = false;
       action = false;
-      Serial.println("OK");
+      Serial.println("COMM{OK}");
     }
     else {
-      Serial.println("ERR");
+      Serial.println("COMM{ERR}");
     }
   }
 
@@ -90,7 +90,7 @@ void loop() {
   if (time <= 0.0 && !action) {
     time = 0.0;
     if (!endSent) {
-      Serial.println("END");
+      Serial.println("COMM{END}");
       endSent = true;
     }
   }
@@ -101,7 +101,7 @@ void loop() {
   else {
     heater = false;
     if (!endSent && action) {
-      Serial.println("END");
+      Serial.println("COMM{END}");
       endSent = true;
     }
   }

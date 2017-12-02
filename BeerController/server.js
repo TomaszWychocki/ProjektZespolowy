@@ -4,13 +4,7 @@ server = require('http').createServer(app);
 io = require('socket.io').listen(server);
 
 var SerialPort = require("serialport");
-var arduino = new SerialPort("/dev/ttyUSB0", {
-	baudRate : 9600,
-	dataBits : 8,
-	parity : 'none',
-	stopBits: 1,
-	flowControl : false,
-});
+var arduino = new SerialPort("/dev/ttyACM0", 9600);
 
 var intervalObj = null;
 var intervalObj2 = null;
@@ -26,8 +20,18 @@ app.use(express.static('public'));
 arduino.on('open', function() {
 	arduino.on('data', function(data) {
 		var m = data.toString('ascii');
+
+		if(!cmdPart.includes("\n")) {
+				cmdPart += m;
+		}
+
+		if(!cmdPart.includes("\n"))
+				return;
+
+		m = cmdPart;
+		cmdPart = "";
 		m = m.replace("\n", "");
-		//console.log(m);
+		console.log(m);
 
 		if(m.includes("TEMP1"))
 			io.sockets.emit('message', {type: "TEMP1", value: m});
