@@ -1,11 +1,18 @@
-#include "lib/OneWire/OneWire.h"
-#include "lib/DS18B20/DS18B20.h"
-#include "lib/MAX6675/max6675.h"
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <max6675.h>
 
-#define TEMP1 A0 //Content temperature
-#define TEMP2 A1 //Heater temperature
+#define ONE_WIRE_BUS 2 //Heater temperature
 #define HEAT 8   //Heater relay
-#define DEBUG
+
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+DeviceAddress heaterThermometer;
+
+int thermoDO = 4;
+int thermoCS = 5;
+int thermoCLK = 6;
+MAX6675 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 String message;
 bool heater = false;
@@ -18,23 +25,23 @@ double last = 0.0;
 void setup() {
   Serial.setTimeout(20);
   Serial.begin(9600);
+  
+  sensors.begin();
+  sensors.getAddress(heaterThermometer, 0);
+  sensors.setResolution(heaterThermometer, 9);
+  
   pinMode(HEAT, OUTPUT);
 }
 
 double getContentTemperature() {
-  double t = 41.52;
-  #ifdef DEBUG
-    t = 0.12 * analogRead(TEMP1);
-  #endif
-  return t;
+  return thermocouple.readCelsius();
 }
 
 double getHeaterTemperature() {
-  double t = 41.52;
-  #ifdef DEBUG
-    t = 0.12 * analogRead(TEMP2);
-  #endif
-  return t;
+  sensors.requestTemperatures();
+  double tempC = sensors.getTempC(heaterThermometer);
+  tempC = (tempC/100.0*18.0)+tempC;
+  return tempC;
 }
 
 void loop() {
