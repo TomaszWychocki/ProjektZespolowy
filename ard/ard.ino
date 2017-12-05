@@ -22,6 +22,7 @@ bool endSent = true;
 double time = 0.0;
 double targetTemp = 0.0;
 double last = 0.0;
+double lastContentTempReadValue = 0.0, lastContentTempReadTime = 0.0;
 
 void setup() {
   Serial.setTimeout(20);
@@ -56,14 +57,19 @@ double interpolate(double x, double pointsArray[][2], int size, bool extrapolate
 }
 
 double getContentTemperature() {
-  double t = thermocouple.readCelsius();
-  return t * interpolate(t, contentPoints, 94, true);
+  double t = lastContentTempReadValue;
+  if(millis() - lastContentTempReadTime >= 1000){
+    lastContentTempReadTime = millis();
+    t = thermocouple.readCelsius();
+    lastContentTempReadValue = t;
+  }
+  return t * interpolate(t, contentPoints, 47, true);
 }
 
 double getHeaterTemperature() {
   sensors.requestTemperatures();
   double t = sensors.getTempC(heaterThermometer);
-  return t * interpolate(t, heaterPoints, 94, true);
+  return t * interpolate(t, heaterPoints, 47, true);
 }
 
 void loop() {
