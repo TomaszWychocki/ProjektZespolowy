@@ -1,6 +1,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <max6675.h>
+#include "points.h"
 
 #define ONE_WIRE_BUS 2 //Heater temperature
 #define HEAT 8   //Heater relay
@@ -33,15 +34,36 @@ void setup() {
   pinMode(HEAT, OUTPUT);
 }
 
+double interpolate(double x, double pointsArray[][2], int size, bool extrapolate) {
+  if (x <= 24)
+    return 1.0;
+	
+  int i = 0;
+  if (x >= pointsArray[size - 2][0])
+    i = size - 2;
+  else
+    while (x > pointsArray[i + 1][0]) i++;
+
+  double xL = pointsArray[i][0], yL = pointsArray[i][1], xR = pointsArray[i + 1][0], yR = pointsArray[i + 1][1];
+
+  if (!extrapolate) {
+    if (x < xL) yR = yL;
+    if (x > xR) yL = yR;
+  }
+
+  double dydx = (yR - yL) / (xR - xL);
+  return yL + dydx * (x - xL);
+}
+
 double getContentTemperature() {
-  return thermocouple.readCelsius();
+  double t = thermocouple.readCelsius();
+  return t * interpolate(t, contentPoints, 94, true);
 }
 
 double getHeaterTemperature() {
   sensors.requestTemperatures();
-  double tempC = sensors.getTempC(heaterThermometer);
-  tempC = (tempC/100.0*18.0)+tempC;
-  return tempC;
+  double t = sensors.getTempC(heaterThermometer);
+  return t * interpolate(t, heaterPoints, 94, true);
 }
 
 void loop() {
