@@ -131,7 +131,8 @@ void loop() {
   }
   
   if (getContentTemperature() < targetTemp && getHeaterTemperature() < targetTemp + 5.0) {
-    heater = true;
+    if(getContentTemperature() < targetTemp - 2.0)
+      heater = true;
   }
   else {
     heater = false;
