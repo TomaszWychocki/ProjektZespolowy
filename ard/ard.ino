@@ -23,6 +23,7 @@ double time = 0.0;
 double targetTemp = 0.0;
 double last = 0.0;
 double lastContentTempReadValue = 0.0, lastContentTempReadTime = 0.0;
+double lastRelayChange = 0.0;
 
 void setup() {
   Serial.setTimeout(20);
@@ -131,8 +132,7 @@ void loop() {
   }
   
   if (getContentTemperature() < targetTemp && getHeaterTemperature() < targetTemp + 5.0) {
-    if(getContentTemperature() < targetTemp - 2.0)
-      heater = true;
+    heater = true;
   }
   else {
     heater = false;
@@ -142,5 +142,8 @@ void loop() {
     }
   }
 
-  digitalWrite(HEAT, heater);
+  if (millis() - lastRelayChange >= 2000) {
+    lastRelayChange = millis();
+    digitalWrite(HEAT, heater);
+  }
 }
