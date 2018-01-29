@@ -136,7 +136,7 @@ void loop() {
   }
   else {
     heater = false;
-    if (!endSent && action) {
+    if (!endSent && action && getContentTemperature() >= targetTemp) {
       Serial.println("COMM{END}");
       endSent = true;
     }
